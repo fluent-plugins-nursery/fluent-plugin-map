@@ -6,6 +6,11 @@ module Fluent
     config_param :map, :string
     config_param :multi, :bool, :default => false
 
+    def configure(conf)
+      super
+      $log.debug { "map: #{@map}" }
+    end
+
     def emit(tag, es, chain)
       tuples = []
       es.each {|time, record|
