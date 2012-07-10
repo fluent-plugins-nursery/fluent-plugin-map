@@ -1,4 +1,4 @@
-# fluent-plugin-select-if
+# fluent-plugin-map
 
 fluent-plugin-map(out\_map) is the non-buffered plugin that can convert an event log to different event log(s)
 
