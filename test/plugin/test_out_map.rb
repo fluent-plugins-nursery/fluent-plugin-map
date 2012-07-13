@@ -47,4 +47,20 @@ class MapOutputTest < Test::Unit::TestCase
     assert_equal ["tag1", time.to_i, record], emits[0]
     assert_equal ["tag2", time.to_i, record], emits[1]
   end
+
+  def test_syntax_error
+    tag = "tag"
+    time = Time.local(2012, 10, 10, 10, 10, 0)
+    record = {'code' => '300'}
+
+    #map is syntax error
+    syntax_error_config = %[
+      map tag.
+    ]
+    d1 = create_driver(syntax_error_config, tag)
+    es = Fluent::OneEventStream.new(time.to_i, record)
+    chain = Fluent::Test::TestOutputChain.new
+    e =  d1.instance.emit(tag, es, chain)
+    assert e.kind_of?(SyntaxError)
+  end
 end

@@ -12,21 +12,27 @@ module Fluent
     end
 
     def emit(tag, es, chain)
-      tuples = []
-      es.each {|time, record|
-        new_tuple = eval(@map)
-        if @multi
-          tuples.concat new_tuple
-        else
-          tuples << new_tuple
+      begin
+        tuples = []
+        es.each {|time, record|
+          new_tuple = eval(@map)
+          if @multi
+            tuples.concat new_tuple
+          else
+            tuples << new_tuple
+          end
+        }
+        tuples.each do |tag, time, record|
+          $log.trace { [tag, time, record].inspect }
+          Fluent::Engine::emit(tag, time, record)
         end
-      }
-      tuples.each do |tag, time, record|
-        $log.trace { [tag, time, record].inspect }
-        Fluent::Engine::emit(tag, time, record)
+        chain.next
+        tuples
+      rescue SyntaxError => e
+        chain.next
+        $log.error "Select_if command is syntax error: #{@select_if}"
+        e #for test
       end
-      chain.next
-      tuples
     end
   end
 end
