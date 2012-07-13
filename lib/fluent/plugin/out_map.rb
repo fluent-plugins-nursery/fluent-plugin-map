@@ -23,6 +23,9 @@ module Fluent
           end
         }
         tuples.each do |tag, time, record|
+          if time == nil or record == nil
+            raise SyntaxError.new
+          end
           $log.trace { [tag, time, record].inspect }
           Fluent::Engine::emit(tag, time, record)
         end
