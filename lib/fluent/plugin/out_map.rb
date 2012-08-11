@@ -53,7 +53,7 @@ module Fluent
         tuples
       rescue SyntaxError => e
         chain.next
-        $log.error "Select_if command is syntax error: #{@map}"
+        $log.error "map command is syntax error: #{@map}"
         e #for test
       end
     end
