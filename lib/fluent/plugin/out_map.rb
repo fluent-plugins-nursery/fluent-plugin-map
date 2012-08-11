@@ -4,7 +4,8 @@ module Fluent
     Fluent::Plugin.register_output('map', self)
 
     config_param :map, :string, :default => nil
-    config_param :key, :string, :default => nil
+    config_param :tag, :string, :default => nil
+    config_param :key, :string, :default => nil #deprected
     config_param :time, :string, :default => nil
     config_param :record, :string, :default => nil
     config_param :multi, :bool, :default => false
@@ -14,9 +15,10 @@ module Fluent
       if @map
         $log.debug { "map: #{@map}" }
         @mode = "tuple"
-      elsif @key && @time && @record
-        raise ConfigError, "multi and 3 parameters(key, time, and record) are not compatible" if @multi
-        $log.debug { "key: #{@key}, time: #{@time}, record: #{@record}" }
+      elsif (@tag || @key) && @time && @record
+        @tag ||= @key
+        raise ConfigError, "multi and 3 parameters(tag, time, and record) are not compatible" if @multi
+        $log.debug { "tag: #{@tag}, time: #{@time}, record: #{@record}" }
         @mode = "each"
       else
         raise ConfigError, "Either map or 3 parameters(key, time, and record) is required "
@@ -36,10 +38,10 @@ module Fluent
               tuples << new_tuple
             end
           when "each"
-            new_key = eval(@key)
+            new_tag = eval(@tag)
             new_time = eval(@time)
             new_record = eval(@record)
-            tuples << [new_key, new_time, new_record]
+            tuples << [new_tag, new_time, new_record]
           end
         }
         tuples.each do |tag, time, record|

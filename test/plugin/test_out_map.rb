@@ -80,6 +80,25 @@ class MapOutputTest < Test::Unit::TestCase
     assert e.kind_of?(SyntaxError)
   end
 
+  def test_tag_convert_using_tag_time_record
+    tag = 'tag'
+    time = Time.local(2012, 10, 10, 10, 10, 10)
+    record = {'code' => '300'}
+
+    d1 = create_driver %[
+      tag "newtag"
+      time time
+      record record
+    ], tag
+    d1.run do
+      d1.emit(record, time)
+    end
+    emits = d1.emits
+    assert_equal 1, emits.length
+    assert_equal ["newtag", time.to_i, record], emits[0]
+  end
+
+  #deprected specification test
   def test_tag_convert_using_key_time_record
     tag = 'tag'
     time = Time.local(2012, 10, 10, 10, 10, 10)
@@ -98,7 +117,7 @@ class MapOutputTest < Test::Unit::TestCase
     assert_equal ["newtag", time.to_i, record], emits[0]
   end
 
-  def test_config_error_key
+  def test_config_error_tag
     tag = "tag"
     time = Time.local(2012, 10, 10, 10, 10, 0)
     record = {'code' => '300'}
@@ -119,7 +138,7 @@ class MapOutputTest < Test::Unit::TestCase
     #require time
     assert_raise(Fluent::ConfigError){
       create_driver %[
-        key "newtag"
+        tag "newtag"
         record record
       ], tag
     }
@@ -132,7 +151,7 @@ class MapOutputTest < Test::Unit::TestCase
     #require record
     assert_raise(Fluent::ConfigError){
       create_driver %[
-        key "newtag"
+        tag "newtag"
         time time
       ], tag
     }
@@ -147,7 +166,7 @@ class MapOutputTest < Test::Unit::TestCase
     #require time
     assert_raise(Fluent::ConfigError){
       create_driver %[
-        key "newtag"
+        tag "newtag"
         time time
         record record
         multi true
