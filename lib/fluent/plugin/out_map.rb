@@ -48,7 +48,7 @@ module Fluent
                end
       tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
       tuples.each do |tag, time, record|
-        if time == nil or record == nil
+        if time == nil || record == nil
           raise SyntaxError.new
         end
         tag_output_es[tag].add(time, record)
