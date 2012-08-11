@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-map"
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.authors     = ["Kohei Tomita"]
   s.email       = ["tommy.fmale@gmail.com"]
   s.homepage    = "https://github.com/tomity/fluent-plugin-map"
