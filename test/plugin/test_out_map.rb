@@ -173,4 +173,22 @@ class MapOutputTest < Test::Unit::TestCase
       ], tag
     }
   end
+
+  def test_timeout
+    tag = 'tag'
+    time = Time.local(2012, 10, 10, 10, 10, 10)
+    record = {'code' => '300'}
+
+    d1 = create_driver %[
+      key "newtag"
+      time sleep 10
+      record record
+      timeout 1s
+    ], tag
+    d1.run do
+      d1.emit(record, time)
+    end
+    emits = d1.emits
+    assert_equal 0, emits.length
+  end
 end

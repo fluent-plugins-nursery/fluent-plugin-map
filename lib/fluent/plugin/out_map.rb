@@ -9,6 +9,7 @@ module Fluent
     config_param :time, :string, :default => nil
     config_param :record, :string, :default => nil
     config_param :multi, :bool, :default => false
+    config_param :timeout, :time, :default => 1
 
     def configure(conf)
       super
@@ -69,18 +70,30 @@ module Fluent
     def generate_tuples_single(tag, es)
       tuples = []
       es.each {|time, record|
-        case @mode
-        when "tuple"
-          new_tuple = eval(@map)
-          tuples << new_tuple
-        when "each"
-          new_tag = eval(@tag)
-          new_time = eval(@time)
-          new_record = eval(@record)
-          tuples << [new_tag, new_time, new_record]
-        end
+        timeout_block(tag, time, record){
+          case @mode
+          when "tuple"
+            new_tuple = eval(@map)
+            tuples << new_tuple
+          when "each"
+            new_tag = eval(@tag)
+            new_time = eval(@time)
+            new_record = eval(@record)
+            tuples << [new_tag, new_time, new_record]
+          end
+        }
       }
      tuples
+    end
+
+    def timeout_block(tag, time, record)
+      begin
+        Timeout.timeout(@timeout){
+          yield
+        }
+      rescue Timeout::Error
+        $log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
+      end
     end
   end
 end
