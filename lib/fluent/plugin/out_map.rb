@@ -27,37 +27,60 @@ module Fluent
 
     def emit(tag, es, chain)
       begin
-        tuples = []
-        es.each {|time, record|
-          case @mode
-          when "tuple"
-            new_tuple = eval(@map)
-            if @multi
-              tuples.concat new_tuple
-            else
-              tuples << new_tuple
-            end
-          when "each"
-            new_tag = eval(@tag)
-            new_time = eval(@time)
-            new_record = eval(@record)
-            tuples << [new_tag, new_time, new_record]
-          end
-        }
-        tuples.each do |tag, time, record|
-          if time == nil or record == nil
-            raise SyntaxError.new
-          end
-          $log.trace { [tag, time, record].inspect }
-          Fluent::Engine::emit(tag, time, record)
+        tag_output_es = do_map(tag, es)
+        tag_output_es.each_pair do |tag, output_es|
+          Fluent::Engine::emit_stream(tag, output_es)
         end
         chain.next
-        tuples
+        tag_output_es
       rescue SyntaxError => e
         chain.next
         $log.error "map command is syntax error: #{@map}"
         e #for test
       end
+    end
+
+    def do_map(tag, es)
+      tuples = if @multi
+                 generate_tuples_multi(tag, es)
+               else
+                 generate_tuples_single(tag, es)
+               end
+      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
+      tuples.each do |tag, time, record|
+        if time == nil or record == nil
+          raise SyntaxError.new
+        end
+        tag_output_es[tag].add(time, record)
+        $log.trace { [tag, time, record].inspect }
+      end
+      tag_output_es
+    end
+
+    def generate_tuples_multi(tag, es)
+      tuples = []
+      es.each {|time, record|
+        new_tuple = eval(@map)
+        tuples.concat new_tuple
+      }
+     tuples
+    end
+
+    def generate_tuples_single(tag, es)
+      tuples = []
+      es.each {|time, record|
+        case @mode
+        when "tuple"
+          new_tuple = eval(@map)
+          tuples << new_tuple
+        when "each"
+          new_tag = eval(@tag)
+          new_time = eval(@time)
+          new_record = eval(@record)
+          tuples << [new_tag, new_time, new_record]
+        end
+      }
+     tuples
     end
   end
 end
