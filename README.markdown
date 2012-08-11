@@ -30,3 +30,16 @@ This sample config output code file and time file.
 The parameter "map" can use 3 variables in event log; tag, time, record. The format of time is an integer number of seconds since the Epoch. The format of record is hash.
 The config file parses # as the begin of comment. So the "map" value cannot use #{tag} operation.
 This plugin can output multi logs by seting multi to true.
+
+If you don't use multi option, you can use key, time, record parameter. The 2 following match directive is same:
+
+    <match tag>
+      type map
+      map ["code." + tag, time, {"code" => record["code"].to_i}]
+    </match>
+    <match tag>
+      type map
+      tag "code." + tag
+      time time
+      record {"code" => record["code"].to_i}
+    </match>
