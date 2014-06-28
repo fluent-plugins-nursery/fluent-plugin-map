@@ -160,7 +160,7 @@ class MapOutputTest < Test::Unit::TestCase
   def test_config_error_multi
     tag = "tag"
     time = Time.local(2012, 10, 10, 10, 10, 0)
-    time = Time.local(2012, 10, 10, 10, 10, 0)
+    #time = Time.local(2012, 10, 10, 10, 10, 0)
     record = {'code' => '300'}
 
     #require time
@@ -190,5 +190,67 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 0, emits.length
+  end
+
+  # Add format test
+  ## test format type (map, record, maps)
+  ## test Backward compatibility without format
+  ## 
+
+  def test_convert_format_map
+    tag = 'tag'
+    time = Time.local(2012, 10, 10, 10, 10, 10)
+    record = {'code1' => '300', 'code2' => '400'}
+
+    d1 = create_driver %[
+      format map
+      map [["tag1", time, record["code1"]], ["tag2", time, record["code2"]]]
+      multi true
+    ], tag
+    d1.run do
+      d1.emit(record, time)
+    end
+    emits = d1.emits
+    assert_equal 2, emits.length
+    assert_equal ["tag1", time.to_i, record["code1"]], emits[0]
+    assert_equal ["tag2", time.to_i, record["code2"]], emits[1]
+  end
+
+  def test_tag_convert_format_record
+    tag = 'tag'
+    time = Time.local(2012, 10, 10, 10, 10, 10)
+    record = {'code' => '300'}
+
+    d1 = create_driver %[
+      format record
+      tag "newtag"
+      time time
+      record record
+    ], tag
+    d1.run do
+      d1.emit(record, time)
+    end
+    emits = d1.emits
+    assert_equal 1, emits.length
+    assert_equal ["newtag", time.to_i, record], emits[0]
+  end
+
+  def test_convert_format_multimap
+    tag = 'tag'
+    time = Time.local(2012, 10, 10, 10, 10, 10)
+    record = {'code1' => '300', 'code2' => '400'}
+
+    d1 = create_driver %[
+      format multimap
+      mmap1 ["tag1", time, record["code1"]]
+      mmap2 ["tag2", time, record["code2"]]
+    ], tag
+    d1.run do
+      d1.emit(record, time)
+    end
+    emits = d1.emits
+    assert_equal 2, emits.length
+    assert_equal ["tag1", time.to_i, record["code1"]], emits[0]
+    assert_equal ["tag2", time.to_i, record["code2"]], emits[1]
   end
 end
