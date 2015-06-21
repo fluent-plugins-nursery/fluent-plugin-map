@@ -14,7 +14,7 @@ This sample config output code file and time file.
     </source>
     <match tag>
       type map
-      map [["code." + tag, time, {"code" => record["code"].to_i}], ["time." + tag, time, {"time" => record["time"].to_i}]]
+      map ([["code." + tag, time, {"code" => record["code"].to_i}], ["time." + tag, time, {"time" => record["time"].to_i}]])
       multi true
     </match>
     <match code.tag>
@@ -35,11 +35,14 @@ If you don't use multi option, you can use key, time, record parameter. The 2 fo
 
     <match tag>
       type map
-      map ["code." + tag, time, {"code" => record["code"].to_i}]
+      map (["code." + tag, time, {"code" => record["code"].to_i}])
     </match>
     <match tag>
       type map
-      tag "code." + tag
+      tag ("code." + tag)
       time time
-      record {"code" => record["code"].to_i}
+      record ({"code" => record["code"].to_i})
     </match>
+
+Note: you have to wrap some configuration values with parenthesis like `("code." + tag)`, to avoid parsing by Fluentd itself. 
+See also: [Fluentd | Configuration File | Format tips](http://docs.fluentd.org/articles/config-file#format-tips)
