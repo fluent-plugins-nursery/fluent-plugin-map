@@ -44,5 +44,10 @@ If you don't use multi option, you can use key, time, record parameter. The 2 fo
       record ({"code" => record["code"].to_i})
     </match>
 
-Note: you have to wrap some configuration values with parenthesis like `("code." + tag)`, to avoid parsing by Fluentd itself. 
+Note: you have to wrap some configuration values with parenthesis like `("code." + tag)`, to avoid parsing by Fluentd itself.
 See also: [Fluentd | Configuration File | Format tips](http://docs.fluentd.org/articles/config-file#format-tips)
+
+## Copyright
+
+* Copyright (c) 2015- Tomita Kohei
+* Apache License, Version 2.0
