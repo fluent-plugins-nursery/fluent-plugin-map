@@ -5,7 +5,7 @@ module Fluent
 
     config_param :map, :string, :default => nil
     config_param :tag, :string, :default => nil
-    config_param :key, :string, :default => nil #deprected
+    config_param :key, :string, :default => nil #deprecated
     config_param :time, :string, :default => nil
     config_param :record, :string, :default => nil
     config_param :multi, :bool, :default => false
@@ -29,7 +29,7 @@ module Fluent
       elsif (@tag || @key) && @time && @record
         "record"
       else
-        raise ConfigError, "Any of map, 3 parameters(key, time, and record) or format is required "
+        raise ConfigError, "Any of map, 3 parameters(tag, time, and record) or format is required "
       end
     end
 
@@ -69,7 +69,7 @@ module Fluent
 
     def parse_multimap(conf)
       check_mmap_range(conf)
-      
+
       prev_mmap = nil
       result_mmaps = (1..MMAP_MAX_NUM).map { |i|
         mmap = conf["mmap#{i}"]
