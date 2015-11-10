@@ -99,7 +99,7 @@ module Fluent
       begin
         tag_output_es = do_map(tag, es)
         tag_output_es.each_pair do |tag, output_es|
-          Fluent::Engine::emit_stream(tag, output_es)
+          router.emit_stream(tag, output_es)
         end
         chain.next
         tag_output_es
