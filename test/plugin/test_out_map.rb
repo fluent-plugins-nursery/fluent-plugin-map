@@ -16,7 +16,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_tag_convert
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -27,12 +27,12 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 1, emits.length
-    assert_equal ["newtag", time.to_i, record], emits[0]
+    assert_equal ["newtag", time, record], emits[0]
   end
 
   def test_convert_multi_tag
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -44,13 +44,13 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 2, emits.length
-    assert_equal ["tag1", time.to_i, record], emits[0]
-    assert_equal ["tag2", time.to_i, record], emits[1]
+    assert_equal ["tag1", time, record], emits[0]
+    assert_equal ["tag2", time, record], emits[1]
   end
 
   def test_syntax_error
     tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0)
+    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
     record = {'code' => '300'}
 
     #map is syntax error
@@ -58,7 +58,7 @@ class MapOutputTest < Test::Unit::TestCase
       map tag.
     ]
     d1 = create_driver(syntax_error_config, tag)
-    es = Fluent::OneEventStream.new(time.to_i, record)
+    es = Fluent::OneEventStream.new(time, record)
     chain = Fluent::Test::TestOutputChain.new
     e =  d1.instance.emit(tag, es, chain)
     assert e.kind_of?(SyntaxError)
@@ -66,7 +66,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_syntax_error2
     tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0)
+    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
     record = {'code' => '300'}
 
     #map output lligal format
@@ -74,7 +74,7 @@ class MapOutputTest < Test::Unit::TestCase
       map tag
     ]
     d1 = create_driver(syntax_error_config, tag)
-    es = Fluent::OneEventStream.new(time.to_i, record)
+    es = Fluent::OneEventStream.new(time, record)
     chain = Fluent::Test::TestOutputChain.new
     e =  d1.instance.emit(tag, es, chain)
     assert e.kind_of?(SyntaxError)
@@ -82,7 +82,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_tag_convert_using_tag_time_record
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -95,13 +95,13 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 1, emits.length
-    assert_equal ["newtag", time.to_i, record], emits[0]
+    assert_equal ["newtag", time, record], emits[0]
   end
 
   #deprected specification test
   def test_tag_convert_using_key_time_record
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -114,12 +114,12 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 1, emits.length
-    assert_equal ["newtag", time.to_i, record], emits[0]
+    assert_equal ["newtag", time, record], emits[0]
   end
 
   def test_config_error_tag
     tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0)
+    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
     record = {'code' => '300'}
 
     #require time
@@ -146,7 +146,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_config_error_record
     tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0)
+    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
 
     #require record
     assert_raise(Fluent::ConfigError){
@@ -159,8 +159,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_config_error_multi
     tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0)
-    #time = Time.local(2012, 10, 10, 10, 10, 0)
+    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
     record = {'code' => '300'}
 
     #require time
@@ -176,7 +175,7 @@ class MapOutputTest < Test::Unit::TestCase
 
   def test_timeout
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -195,11 +194,11 @@ class MapOutputTest < Test::Unit::TestCase
   # Add format test
   ## test format type (map, record, maps)
   ## test Backward compatibility without format
-  ## 
+  ##
 
   def test_convert_format_map
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code1' => '300', 'code2' => '400'}
 
     d1 = create_driver %[
@@ -212,13 +211,13 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 2, emits.length
-    assert_equal ["tag1", time.to_i, record["code1"]], emits[0]
-    assert_equal ["tag2", time.to_i, record["code2"]], emits[1]
+    assert_equal ["tag1", time, record["code1"]], emits[0]
+    assert_equal ["tag2", time, record["code2"]], emits[1]
   end
 
   def test_tag_convert_format_record
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code' => '300'}
 
     d1 = create_driver %[
@@ -232,12 +231,12 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 1, emits.length
-    assert_equal ["newtag", time.to_i, record], emits[0]
+    assert_equal ["newtag", time, record], emits[0]
   end
 
   def test_convert_format_multimap
     tag = 'tag'
-    time = Time.local(2012, 10, 10, 10, 10, 10)
+    time = Time.local(2012, 10, 10, 10, 10, 10).to_i
     record = {'code1' => '300', 'code2' => '400'}
 
     d1 = create_driver %[
@@ -250,7 +249,7 @@ class MapOutputTest < Test::Unit::TestCase
     end
     emits = d1.emits
     assert_equal 2, emits.length
-    assert_equal ["tag1", time.to_i, record["code1"]], emits[0]
-    assert_equal ["tag2", time.to_i, record["code2"]], emits[1]
+    assert_equal ["tag1", time, record["code1"]], emits[0]
+    assert_equal ["tag2", time, record["code2"]], emits[1]
   end
 end
