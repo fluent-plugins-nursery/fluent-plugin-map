@@ -3,6 +3,11 @@ module Fluent
   class MapOutput < Fluent::Output
     Fluent::Plugin.register_output('map', self)
 
+    # Define `router` method of v0.12 to support v0.10 or earlier
+    unless method_defined?(:router)
+      define_method("router") { Fluent::Engine }
+    end
+
     config_param :map, :string, :default => nil
     config_param :tag, :string, :default => nil
     config_param :key, :string, :default => nil #deprecated
@@ -99,7 +104,7 @@ module Fluent
       begin
         tag_output_es = do_map(tag, es)
         tag_output_es.each_pair do |tag, output_es|
-          Fluent::Engine::emit_stream(tag, output_es)
+          router.emit_stream(tag, output_es)
         end
         chain.next
         tag_output_es
