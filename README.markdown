@@ -1,5 +1,7 @@
 # fluent-plugin-map
 
+[![Build Status](https://travis-ci.org/tomity/fluent-plugin-map.svg?branch=master)](https://travis-ci.org/tomity/fluent-plugin-map)
+
 fluent-plugin-map(out\_map) is the non-buffered plugin that can convert an event log to different event log(s)
 
 ## Example
