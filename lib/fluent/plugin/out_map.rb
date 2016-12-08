@@ -8,6 +8,10 @@ module Fluent
       define_method("router") { Fluent::Engine }
     end
 
+    unless method_defined?(:log)
+      define_method("log") { $log }
+    end
+
     config_param :map, :string, :default => nil
     config_param :tag, :string, :default => nil
     config_param :key, :string, :default => nil #deprecated
@@ -110,7 +114,7 @@ module Fluent
         tag_output_es
       rescue SyntaxError => e
         chain.next
-        $log.error "map command is syntax error: #{@map}"
+        log.error "map command is syntax error: #{@map}"
         e #for test
       end
     end
@@ -124,7 +128,7 @@ module Fluent
           raise SyntaxError.new
         end
         tag_output_es[tag].add(time, record)
-        $log.trace { [tag, time, record].inspect }
+        log.trace { [tag, time, record].inspect }
       end
       tag_output_es
     end
@@ -144,7 +148,7 @@ module Fluent
           yield
         }
       rescue Timeout::Error
-        $log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
+        log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
       end
     end
   end
