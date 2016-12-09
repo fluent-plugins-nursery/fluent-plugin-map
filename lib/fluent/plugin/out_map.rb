@@ -25,8 +25,11 @@ module Fluent
       @format = determine_format()
       configure_format()
       @map = create_map(conf)
-      erb = ERB.new("<% @map_result = #{@map} %>")
-      erb.def_method(self.class, "map(tag, time, record)", __FILE__)
+      singleton_class.module_eval(<<-CODE)
+        def map_func(tag, time, record)
+          #{@map}
+        end
+      CODE
     end
 
     def determine_format()
@@ -135,8 +138,7 @@ module Fluent
     def generate_tuples(tag, es)
       tuples = []
       es.each {|time, record|
-        map(tag, time, record)
-        new_tuple = @map_result
+        new_tuple = map_func(tag, time, record)
         tuples.concat new_tuple
       }
       tuples
