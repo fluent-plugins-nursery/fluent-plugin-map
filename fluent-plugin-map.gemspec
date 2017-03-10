@@ -4,9 +4,9 @@ $:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-map"
   s.version     = "0.1.0"
-  s.authors     = ["Kohei Tomita"]
-  s.email       = ["tommy.fmale@gmail.com"]
-  s.homepage    = "https://github.com/tomity/fluent-plugin-map"
+  s.authors     = ["Kohei Tomita", "Hiroshi Hatake", "Kenji Okomoto"]
+  s.email       = ["tommy.fmale@gmail.com", "cosmo0920.oucc@gmail.com", "okkez000@gmail.com"]
+  s.homepage    = "https://github.com/fluent-plugins-nursery/fluent-plugin-map"
   s.summary     = %q{fluent-plugin-map is the non-buffered plugin that can convert an event log to different event log(s). }
   s.description = %q{fluent-plugin-map is the non-buffered plugin that can convert an event log to different event log(s).  }
 
