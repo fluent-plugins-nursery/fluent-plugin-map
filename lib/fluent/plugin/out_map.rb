@@ -1,5 +1,3 @@
-require "erb"
-
 module Fluent
   class MapOutput < Fluent::Output
     Fluent::Plugin.register_output('map', self)
