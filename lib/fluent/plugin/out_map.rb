@@ -14,9 +14,13 @@
 #    limitations under the License.
 #
 
+require 'fluent/plugin/map_support'
+
 module Fluent
   class MapOutput < Fluent::Output
     Fluent::Plugin.register_output('map', self)
+
+    include Fluent::MapSupport
 
     # Define `router` method of v0.12 to support v0.10 or earlier
     unless method_defined?(:router)
@@ -27,16 +31,8 @@ module Fluent
       define_method("log") { $log }
     end
 
-    config_param :map, :string, :default => nil
-    config_param :tag, :string, :default => nil
     config_param :key, :string, :default => nil #deprecated
-    config_param :time, :string, :default => nil
-    config_param :record, :string, :default => nil
-    config_param :multi, :bool, :default => false
-    config_param :timeout, :time, :default => 1
-    config_param :format, :string, :default => nil
-
-    MMAP_MAX_NUM = 50
+    config_param :tag, :string, :default => nil
 
     def configure(conf)
       super
@@ -88,57 +84,6 @@ module Fluent
       end
     end
 
-    def parse_map()
-      if @multi
-        @map
-      else
-        "[#{@map}]"
-      end
-    end
-
-    def parse_multimap(conf)
-      check_mmap_range(conf)
-
-      prev_mmap = nil
-      result_mmaps = (1..MMAP_MAX_NUM).map { |i|
-        mmap = conf["mmap#{i}"]
-        if (i > 1) && prev_mmap.nil? && !mmap.nil?
-          raise ConfigError, "Jump of mmap index found. mmap#{i - 1} is missing."
-        end
-        prev_mmap = mmap
-        next if mmap.nil?
-
-        mmap
-      }.compact.join(',')
-      "[#{result_mmaps}]"
-    end
-
-    def check_mmap_range(conf)
-      invalid_mmap = conf.keys.select { |k|
-        m = k.match(/^mmap(\d+)$/)
-        m ? !((1..MMAP_MAX_NUM).include?(m[1].to_i)) : false
-      }
-      unless invalid_mmap.empty?
-        raise ConfigError, "Invalid mmapN found. N should be 1 - #{MMAP_MAX_NUM}: " + invalid_mmap.join(",")
-      end
-    end
-
-
-    def emit(tag, es, chain)
-      begin
-        tag_output_es = do_map(tag, es)
-        tag_output_es.each_pair do |tag, output_es|
-          router.emit_stream(tag, output_es)
-        end
-        chain.next
-        tag_output_es
-      rescue SyntaxError => e
-        chain.next
-        log.error "map command is syntax error: #{@map}"
-        e #for test
-      end
-    end
-
     def do_map(tag, es)
       tuples = generate_tuples(tag, es)
 
@@ -164,13 +109,18 @@ module Fluent
       tuples
     end
 
-    def timeout_block
+    def emit(tag, es, chain)
       begin
-        Timeout.timeout(@timeout){
-          yield
-        }
-      rescue Timeout::Error
-        log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
+        tag_output_es = do_map(tag, es)
+        tag_output_es.each_pair do |tag, output_es|
+          router.emit_stream(tag, output_es)
+        end
+        chain.next
+        tag_output_es
+      rescue SyntaxError => e
+        chain.next
+        log.error "map command is syntax error: #{@map}"
+        e #for test
       end
     end
   end
