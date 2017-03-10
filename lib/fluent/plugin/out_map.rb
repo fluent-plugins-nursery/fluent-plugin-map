@@ -156,13 +156,15 @@ module Fluent
     def generate_tuples(tag, es)
       tuples = []
       es.each {|time, record|
-        new_tuple = map_func(tag, time, record)
-        tuples.concat new_tuple
+        timeout_block do
+          new_tuple = map_func(tag, time, record)
+          tuples.concat new_tuple
+        end
       }
       tuples
     end
 
-    def timeout_block(tag, time, record)
+    def timeout_block
       begin
         Timeout.timeout(@timeout){
           yield
