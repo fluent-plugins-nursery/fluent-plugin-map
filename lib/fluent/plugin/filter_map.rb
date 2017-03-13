@@ -41,7 +41,7 @@ module Fluent
       elsif @time && @record
         "record"
       else
-        raise ConfigError, "Any of map, 2 parameters(time, and record) or format is required "
+        raise Fluent::ConfigError, "Any of map, 2 parameters(time, and record) or format is required "
       end
     end
 
@@ -50,11 +50,11 @@ module Fluent
       when "map"
         # pass
       when "record"
-        raise ConfigError, "multi and 2 parameters(time, and record) are not compatible" if @multi
+        raise Fluent::ConfigError, "multi and 2 parameters(time, and record) are not compatible" if @multi
       when "multimap"
         # pass.
       else
-        raise ConfigError, "format #{@format} is invalid."
+        raise Fluent::ConfigError, "format #{@format} is invalid."
       end
     end
 
@@ -72,7 +72,7 @@ module Fluent
 
     def filter_stream(tag, es)
       begin
-        new_es = MultiEventStream.new
+        new_es = Fluent::MultiEventStream.new
         tag_output_es = @map_support.do_map(tag, es)
         tag_output_es.each_pair do |tag, output_es|
           output_es.each{|time, record|

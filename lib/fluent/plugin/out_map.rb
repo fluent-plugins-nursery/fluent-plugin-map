@@ -53,7 +53,7 @@ module Fluent
       elsif (@tag || @key) && @time && @record
         "record"
       else
-        raise ConfigError, "Any of map, 3 parameters(tag, time, and record) or format is required "
+        raise Fluent::ConfigError, "Any of map, 3 parameters(tag, time, and record) or format is required "
       end
     end
 
@@ -63,11 +63,11 @@ module Fluent
         # pass
       when "record"
         @tag ||= @key
-        raise ConfigError, "multi and 3 parameters(tag, time, and record) are not compatible" if @multi
+        raise Fluent::ConfigError, "multi and 3 parameters(tag, time, and record) are not compatible" if @multi
       when "multimap"
         # pass.
       else
-        raise ConfigError, "format #{@format} is invalid."
+        raise Fluent::ConfigError, "format #{@format} is invalid."
       end
     end
 

@@ -49,7 +49,7 @@ module Fluent
     def do_map_filter(tag, es)
       tuples = generate_tuples(tag, es)
 
-      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
+      tag_output_es = Hash.new{|h, key| h[key] = Fluent::MultiEventStream.new}
       tuples.each do |time, record|
         if time == nil || record == nil
           raise SyntaxError.new
@@ -63,7 +63,7 @@ module Fluent
     def do_map_output(tag, es)
       tuples = generate_tuples(tag, es)
 
-      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
+      tag_output_es = Hash.new{|h, key| h[key] = Fluent::MultiEventStream.new}
       tuples.each do |tag, time, record|
         if time == nil || record == nil
           raise SyntaxError.new
