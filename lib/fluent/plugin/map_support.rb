@@ -19,17 +19,6 @@ module Fluent
 
     MMAP_MAX_NUM = 50
 
-    def self.included(klass)
-      klass.instance_eval {
-        config_param :map, :string, :default => nil
-        config_param :time, :string, :default => nil
-        config_param :record, :string, :default => nil
-        config_param :multi, :bool, :default => false
-        config_param :timeout, :time, :default => 1
-        config_param :format, :string, :default => nil
-      }
-    end
-
     def parse_map()
       if @multi
         @map

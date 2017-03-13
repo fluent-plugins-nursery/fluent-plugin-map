@@ -15,11 +15,13 @@
 #
 
 require 'fluent/plugin/map_support'
+require 'fluent/plugin/map_config_param'
 
 module Fluent
   class MapFilter < Fluent::Filter
     Fluent::Plugin.register_filter('map', self)
 
+    include Fluent::MapConfigParam
     include Fluent::MapSupport
 
     def configure(conf)

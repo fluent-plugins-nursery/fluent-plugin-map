@@ -15,11 +15,13 @@
 #
 
 require 'fluent/plugin/map_support'
+require 'fluent/plugin/map_config_param'
 
 module Fluent
   class MapOutput < Fluent::Output
     Fluent::Plugin.register_output('map', self)
 
+    include Fluent::MapConfigParam
     include Fluent::MapSupport
 
     # Define `router` method of v0.12 to support v0.10 or earlier
