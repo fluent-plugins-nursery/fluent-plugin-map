@@ -15,52 +15,98 @@
 #
 
 module Fluent
-  module MapSupport
-
-    MMAP_MAX_NUM = 50
-
-    def parse_map()
-      if @multi
-        @map
-      else
-        "[#{@map}]"
-      end
-    end
-
-    def parse_multimap(conf)
-      check_mmap_range(conf)
-
-      prev_mmap = nil
-      result_mmaps = (1..MMAP_MAX_NUM).map { |i|
-        mmap = conf["mmap#{i}"]
-        if (i > 1) && prev_mmap.nil? && !mmap.nil?
-          raise ConfigError, "Jump of mmap index found. mmap#{i - 1} is missing."
+  class MapSupport
+    def initialize(map, plugin)
+      @map = map
+      @plugin = plugin
+      if defined?(Fluent::Filter) and plugin.is_a?(Fluent::Filter)
+        singleton_class.module_eval(<<-CODE)
+          def map_func(time, record)
+            #{@map}
+          end
+        CODE
+        class << self
+          alias_method :generate_tuples, :generate_tuples_filter
+          alias_method :do_map, :do_map_filter
         end
-        prev_mmap = mmap
-        next if mmap.nil?
-
-        mmap
-      }.compact.join(',')
-      "[#{result_mmaps}]"
+      elsif plugin.is_a?(Fluent::Output)
+        singleton_class.module_eval(<<-CODE)
+          def map_func(tag, time, record)
+            #{@map}
+          end
+        CODE
+        class << self
+          alias_method :generate_tuples, :generate_tuples_output
+          alias_method :do_map, :do_map_output
+        end
+      end
     end
 
-    def check_mmap_range(conf)
-      invalid_mmap = conf.keys.select { |k|
-        m = k.match(/^mmap(\d+)$/)
-        m ? !((1..MMAP_MAX_NUM).include?(m[1].to_i)) : false
-      }
-      unless invalid_mmap.empty?
-        raise ConfigError, "Invalid mmapN found. N should be 1 - #{MMAP_MAX_NUM}: " + invalid_mmap.join(",")
+    def do_map(tag, es)
+      # This method will be overwritten in #initailize.
+    end
+
+    def do_map_output(tag, es)
+      tuples = generate_tuples(tag, es)
+
+      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
+      tuples.each do |tag, time, record|
+        if time == nil || record == nil
+          raise SyntaxError.new
+        end
+        tag_output_es[tag].add(time, record)
+        @plugin.log.trace { [tag, time, record].inspect }
       end
+      tag_output_es
+    end
+
+    def do_map_filter(tag, es)
+      tuples = generate_tuples(tag, es)
+
+      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
+      tuples.each do |time, record|
+        if time == nil || record == nil
+          raise SyntaxError.new
+        end
+        tag_output_es[tag].add(time, record)
+        @plugin.log.trace { [tag, time, record].inspect }
+      end
+      tag_output_es
+    end
+
+    def generate_tuples
+      # This method will be overwritten in #initailize.
+    end
+
+    def generate_tuples_filter(tag, es)
+      tuples = []
+      es.each {|time, record|
+        timeout_block do
+          new_tuple = map_func(time, record)
+          tuples.concat new_tuple
+        end
+      }
+      tuples
+    end
+
+    def generate_tuples_output(tag, es)
+      tuples = []
+      es.each {|time, record|
+        timeout_block do
+          new_tuple = map_func(tag, time, record)
+          tuples.concat new_tuple
+        end
+      }
+      tuples
     end
 
     def timeout_block
       begin
-        Timeout.timeout(@timeout){
+        Timeout.timeout(@plugin.timeout){
           yield
         }
       rescue Timeout::Error
-        log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
+        @plugin.log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
       end
     end
   end

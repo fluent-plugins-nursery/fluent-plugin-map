@@ -16,24 +16,21 @@
 
 require 'fluent/plugin/map_support'
 require 'fluent/plugin/map_config_param'
+require 'fluent/plugin/parse_map_mixin'
 
 module Fluent
   class MapFilter < Fluent::Filter
     Fluent::Plugin.register_filter('map', self)
 
     include Fluent::MapConfigParam
-    include Fluent::MapSupport
+    include Fluent::ParseMap::Mixin
 
     def configure(conf)
       super
       @format = determine_format()
       configure_format()
       @map = create_map(conf)
-      singleton_class.module_eval(<<-CODE)
-        def map_func(time, record)
-          #{@map}
-        end
-      CODE
+      @map_support = Fluent::MapSupport.new(@map, self)
     end
 
     def determine_format()
@@ -73,35 +70,10 @@ module Fluent
       end
     end
 
-    def do_map(tag, es)
-      tuples = generate_tuples(tag, es)
-
-      tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
-      tuples.each do |time, record|
-        if time == nil || record == nil
-          raise SyntaxError.new
-        end
-        tag_output_es[tag].add(time, record)
-        log.trace { [tag, time, record].inspect }
-      end
-      tag_output_es
-    end
-
-    def generate_tuples(tag, es)
-      tuples = []
-      es.each {|time, record|
-        timeout_block do
-          new_tuple = map_func(time, record)
-          tuples.concat new_tuple
-        end
-      }
-      tuples
-    end
-
     def filter_stream(tag, es)
       begin
         new_es = MultiEventStream.new
-        tag_output_es = do_map(tag, es)
+        tag_output_es = @map_support.do_map(tag, es)
         tag_output_es.each_pair do |tag, output_es|
           output_es.each{|time, record|
             new_es.add(time, record)
