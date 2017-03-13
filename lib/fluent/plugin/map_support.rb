@@ -46,11 +46,11 @@ module Fluent
       # This method will be overwritten in #initailize.
     end
 
-    def do_map_output(tag, es)
+    def do_map_filter(tag, es)
       tuples = generate_tuples(tag, es)
 
       tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
-      tuples.each do |tag, time, record|
+      tuples.each do |time, record|
         if time == nil || record == nil
           raise SyntaxError.new
         end
@@ -60,11 +60,11 @@ module Fluent
       tag_output_es
     end
 
-    def do_map_filter(tag, es)
+    def do_map_output(tag, es)
       tuples = generate_tuples(tag, es)
 
       tag_output_es = Hash.new{|h, key| h[key] = MultiEventStream::new}
-      tuples.each do |time, record|
+      tuples.each do |tag, time, record|
         if time == nil || record == nil
           raise SyntaxError.new
         end
