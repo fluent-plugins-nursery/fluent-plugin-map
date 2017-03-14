@@ -39,6 +39,7 @@ module Fluent
     config_param :tag, :string, :default => nil
 
     def configure(conf)
+      log.warn "out_map is now deprecated. It will be removed in a future release. Please consider to use filter_map."
       super
       @format = determine_format()
       configure_format()
