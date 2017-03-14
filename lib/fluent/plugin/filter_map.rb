@@ -14,6 +14,7 @@
 #    limitations under the License.
 #
 
+require 'fluent/filter'
 require 'fluent/plugin/map_support'
 require 'fluent/plugin/map_config_param'
 require 'fluent/plugin/parse_map_mixin'
