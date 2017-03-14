@@ -1,6 +1,6 @@
 require 'helper'
-require 'fluent/test/driver/filter'
 begin
+  require 'fluent/test/driver/filter'
   require 'fluent/test/helpers'
   include Fluent::Test::Helpers
 rescue LoadError
