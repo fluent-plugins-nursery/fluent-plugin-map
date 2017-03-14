@@ -14,12 +14,12 @@
 #    limitations under the License.
 #
 
-require 'fluent/filter'
+require 'fluent/plugin/filter'
 require 'fluent/plugin/map_support'
 require 'fluent/plugin/map_config_param'
 require 'fluent/plugin/parse_map_mixin'
 
-module Fluent
+module Fluent::Plugin
   class MapFilter < Fluent::Filter
     Fluent::Plugin.register_filter('map', self)
 

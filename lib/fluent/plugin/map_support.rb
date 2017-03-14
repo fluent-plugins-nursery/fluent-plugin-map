@@ -19,7 +19,7 @@ module Fluent
     def initialize(map, plugin)
       @map = map
       @plugin = plugin
-      if defined?(Fluent::Filter) and plugin.is_a?(Fluent::Filter)
+      if defined?(Fluent::Plugin::Filter) and plugin.is_a?(Fluent::Plugin::Filter)
         singleton_class.module_eval(<<-CODE)
           def map_func(time, record)
             #{@map}
