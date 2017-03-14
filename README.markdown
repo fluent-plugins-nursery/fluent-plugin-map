@@ -75,22 +75,22 @@ If you don't use multi option, you can use time, record parameter. The 2 followi
 This sample config output code file and time file.
 
     <source>
-      type tail
+      @type tail
       format apache
       path /var/log/httpd-access.log
       tag tag
     </source>
     <match tag>
-      type map
+      @type map
       map ([["code." + tag, time, {"code" => record["code"].to_i}], ["time." + tag, time, {"time" => record["time"].to_i}]])
       multi true
     </match>
     <match code.tag>
-      type file
+      @type file
       path code.log
     </match>
     <match time.tag>
-      type file
+      @type file
       path time.log
     </match>
 
@@ -102,11 +102,11 @@ This plugin can output multi logs by seting multi to true.
 If you don't use multi option, you can use key, time, record parameter. The 2 following match directive is same:
 
     <match tag>
-      type map
+      @type map
       map (["code." + tag, time, {"code" => record["code"].to_i}])
     </match>
     <match tag>
-      type map
+      @type map
       tag ("code." + tag)
       time time
       record ({"code" => record["code"].to_i})
