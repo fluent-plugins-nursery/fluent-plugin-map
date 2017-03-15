@@ -19,7 +19,7 @@ module Fluent
     def initialize(map, plugin)
       @map = map
       @plugin = plugin
-      if defined?(Fluent::Plugin::Filter) and plugin.is_a?(Fluent::Plugin::Filter)
+      if plugin.is_a?(Fluent::Plugin::Filter)
         singleton_class.module_eval(<<-CODE)
           def map_func(time, record)
             #{@map}
@@ -29,7 +29,7 @@ module Fluent
           alias_method :generate_tuples, :generate_tuples_filter
           alias_method :do_map, :do_map_filter
         end
-      elsif plugin.is_a?(Fluent::Output)
+      elsif plugin.is_a?(Fluent::Plugin::Output)
         singleton_class.module_eval(<<-CODE)
           def map_func(tag, time, record)
             #{@map}

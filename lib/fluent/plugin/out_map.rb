@@ -14,26 +14,19 @@
 #    limitations under the License.
 #
 
-require 'fluent/output'
+require 'fluent/plugin/output'
 require 'fluent/plugin/map_support'
 require 'fluent/plugin/map_config_param'
 require 'fluent/plugin/parse_map_mixin'
 
-module Fluent
-  class MapOutput < Fluent::Output
+module Fluent::Plugin
+  class MapOutput < Fluent::Plugin::Output
     Fluent::Plugin.register_output('map', self)
+
+    helpers :event_emitter
 
     include Fluent::MapConfigParam
     include Fluent::ParseMap::Mixin
-
-    # Define `router` method of v0.12 to support v0.10 or earlier
-    unless method_defined?(:router)
-      define_method("router") { Fluent::Engine }
-    end
-
-    unless method_defined?(:log)
-      define_method("log") { $log }
-    end
 
     config_param :key, :string, :default => nil #deprecated
     config_param :tag, :string, :default => nil
@@ -85,16 +78,14 @@ module Fluent
       end
     end
 
-    def emit(tag, es, chain)
+    def process(tag, es)
       begin
         tag_output_es = @map_support.do_map(tag, es)
         tag_output_es.each_pair do |tag, output_es|
           router.emit_stream(tag, output_es)
         end
-        chain.next
         tag_output_es
       rescue SyntaxError => e
-        chain.next
         log.error "map command is syntax error: #{@map}"
         e #for test
       end
