@@ -20,7 +20,7 @@ require 'fluent/plugin/map_config_param'
 require 'fluent/plugin/parse_map_mixin'
 
 module Fluent::Plugin
-  class MapFilter < Fluent::Filter
+  class MapFilter < Fluent::Plugin::Filter
     Fluent::Plugin.register_filter('map', self)
 
     include Fluent::MapConfigParam
