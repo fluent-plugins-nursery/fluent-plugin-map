@@ -23,7 +23,7 @@ module Fluent::Plugin
   class MapFilter < Fluent::Plugin::Filter
     Fluent::Plugin.register_filter('map', self)
 
-    include Fluent::MapConfigParam
+    include Fluent::Plugin::MapConfigParam
     include Fluent::ParseMap::Mixin
 
     def configure(conf)
@@ -31,7 +31,7 @@ module Fluent::Plugin
       @format = determine_format()
       configure_format()
       @map = create_map(conf)
-      @map_support = Fluent::MapSupport.new(@map, self)
+      @map_support = Fluent::Plugin::MapSupport.new(@map, self)
     end
 
     def determine_format()

@@ -15,6 +15,7 @@
 #
 
 module Fluent
+  module Plugin
   class MapSupport
     def initialize(map, plugin)
       @map = map
@@ -109,5 +110,6 @@ module Fluent
         @plugin.log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
       end
     end
+  end
   end
 end

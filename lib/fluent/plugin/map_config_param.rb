@@ -15,6 +15,7 @@
 #
 
 module Fluent
+  module Plugin
   module MapConfigParam
     def self.included(klass)
       klass.instance_eval {
@@ -26,5 +27,6 @@ module Fluent
         config_param :format, :string, :default => nil
       }
     end
+  end
   end
 end

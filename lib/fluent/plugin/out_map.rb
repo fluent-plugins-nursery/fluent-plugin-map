@@ -25,7 +25,7 @@ module Fluent::Plugin
 
     helpers :event_emitter
 
-    include Fluent::MapConfigParam
+    include Fluent::Plugin::MapConfigParam
     include Fluent::ParseMap::Mixin
 
     config_param :key, :string, :default => nil #deprecated
@@ -37,7 +37,7 @@ module Fluent::Plugin
       @format = determine_format()
       configure_format()
       @map = create_map(conf)
-      @map_support = Fluent::MapSupport.new(@map, self)
+      @map_support = Fluent::Plugin::MapSupport.new(@map, self)
     end
 
     def determine_format()
