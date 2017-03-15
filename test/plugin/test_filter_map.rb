@@ -1,14 +1,10 @@
 require 'helper'
-begin
-  require 'fluent/test/driver/filter'
-  require 'fluent/test/helpers'
-  include Fluent::Test::Helpers
-rescue LoadError
-end
+require 'fluent/test/driver/filter'
+require 'fluent/test/helpers'
+include Fluent::Test::Helpers
 
 class MapFilterTest < Test::Unit::TestCase
   def setup
-    omit "Use Fluentd v0.14 or later" unless defined?(Fluent::Plugin::Filter)
     Fluent::Test.setup
   end
 

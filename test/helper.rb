@@ -23,4 +23,4 @@ unless ENV.has_key?('VERBOSE')
 end
 
 require "fluent/plugin/out_map"
-require "fluent/plugin/filter_map" if defined?(Fluent::Plugin::Filter)
+require "fluent/plugin/filter_map"
