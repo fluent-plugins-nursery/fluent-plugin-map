@@ -16,17 +16,17 @@
 
 module Fluent
   module Plugin
-  module MapConfigParam
-    def self.included(klass)
-      klass.instance_eval {
-        config_param :map, :string, :default => nil
-        config_param :time, :string, :default => nil
-        config_param :record, :string, :default => nil
-        config_param :multi, :bool, :default => false
-        config_param :timeout, :time, :default => 1
-        config_param :format, :string, :default => nil
-      }
+    module MapConfigParam
+      def self.included(klass)
+        klass.instance_eval {
+          config_param :map, :string, :default => nil
+          config_param :time, :string, :default => nil
+          config_param :record, :string, :default => nil
+          config_param :multi, :bool, :default => false
+          config_param :timeout, :time, :default => 1
+          config_param :format, :string, :default => nil
+        }
+      end
     end
-  end
   end
 end
