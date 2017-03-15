@@ -5,22 +5,18 @@ before_install:
 matrix:
   include:
     - rvm: 2.1
-      gemfile: gemfiles/fluentd_0_10.gemfile
+      gemfile: gemfiles/fluentd_0_14.gemfile
     - rvm: 2.1
-      gemfile: gemfiles/fluentd_0_12.gemfile
-    - rvm: 2.1
+      gemfile: Gemfile
+    - rvm: 2.2
       gemfile: gemfiles/fluentd_0_14.gemfile
     - rvm: 2.2
-      gemfile: gemfiles/fluentd_0_10.gemfile
-    - rvm: 2.2
-      gemfile: gemfiles/fluentd_0_12.gemfile
-    - rvm: 2.2
-      gemfile: gemfiles/fluentd_0_14.gemfile
-    - rvm: 2.3.3
-      gemfile: gemfiles/fluentd_0_12.gemfile
+      gemfile: Gemfile
     - rvm: 2.3.3
       gemfile: gemfiles/fluentd_0_14.gemfile
-    - rvm: 2.4.0
-      gemfile: gemfiles/fluentd_0_12.gemfile
+    - rvm: 2.3.3
+      gemfile: Gemfile
     - rvm: 2.4.0
       gemfile: gemfiles/fluentd_0_14.gemfile
+    - rvm: 2.4.0
+      gemfile: Gemfile
