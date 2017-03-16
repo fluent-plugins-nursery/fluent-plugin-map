@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-map"
-  s.version     = "0.1.2"
+  s.version     = "0.1.3"
   s.authors     = ["Kohei Tomita", "Hiroshi Hatake", "Kenji Okomoto"]
   s.email       = ["tommy.fmale@gmail.com", "cosmo0920.oucc@gmail.com", "okkez000@gmail.com"]
   s.homepage    = "https://github.com/fluent-plugins-nursery/fluent-plugin-map"
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.license       = "Apache-2.0"
 
   s.add_development_dependency "rake"
-  s.add_development_dependency "fluentd", [">= 0.10.24", "< 2"]
+  s.add_development_dependency "fluentd", ["< 0.14.0"]
   s.add_development_dependency "test-unit", "~> 3.1"
   s.add_development_dependency "appraisal"
 end
