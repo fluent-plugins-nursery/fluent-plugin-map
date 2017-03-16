@@ -4,6 +4,14 @@
 
 fluent-plugin-map(out\_map) is the non-buffered plugin that can convert an event log to different event log(s)
 
+
+## Requirements
+
+| fluent-plugin-map  | fluentd | ruby |
+|-------------------|---------|------|
+| >= 0.2.0 | >= v0.14.0 | >= 2.1 |
+|  < 0.2.0 | >= v0.12.0 | >= 1.9 |
+
 ## MapFilter
 
 ### Example
