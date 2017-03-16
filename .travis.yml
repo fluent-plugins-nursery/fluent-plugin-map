@@ -7,4 +7,3 @@ before_install:
 gemfile:
   - gemfiles/fluentd_0_10.gemfile
   - gemfiles/fluentd_0_12.gemfile
-  - gemfiles/fluentd_0_14.gemfile
