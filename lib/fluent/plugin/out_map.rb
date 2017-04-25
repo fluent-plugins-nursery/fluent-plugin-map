@@ -31,6 +31,10 @@ module Fluent::Plugin
     config_param :key, :string, :default => nil #deprecated
     config_param :tag, :string, :default => nil
 
+    def multi_workers_ready?
+      true
+    end
+
     def configure(conf)
       log.warn "out_map is now deprecated. It will be removed in a future release. Please consider to use filter_map."
       super
