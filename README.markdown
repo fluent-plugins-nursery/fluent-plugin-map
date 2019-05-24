@@ -124,7 +124,7 @@ If you don't use multi option, you can use key, time, record parameter. The 2 fo
 ## Note
 
 you have to wrap some configuration values with parenthesis like `("code." + tag)`, to avoid parsing by Fluentd itself.
-See also: [Fluentd | Configuration File | Format tips](http://docs.fluentd.org/articles/config-file#format-tips)
+See also: [Config File Syntax - Fluentd](https://docs.fluentd.org/configuration/config-file#format-tips)
 
 ## Copyright
 
