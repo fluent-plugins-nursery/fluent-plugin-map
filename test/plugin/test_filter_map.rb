@@ -18,9 +18,9 @@ class MapFilterTest < Test::Unit::TestCase
   end
 
   def test_syntax_error
-    tag = "tag"
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _tag = "tag"
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     #map is syntax error
     syntax_error_config = %[
@@ -65,8 +65,8 @@ class MapFilterTest < Test::Unit::TestCase
 
   #deprected specification test
   def test_config_error_time
-    tag = "tag"
-    record = {'code' => '300'}
+    _tag = "tag"
+    _record = {'code' => '300'}
 
     #require time
     assert_raise(Fluent::ConfigError){
@@ -77,7 +77,7 @@ class MapFilterTest < Test::Unit::TestCase
   end
 
   def test_config_error_record
-    time = event_time('2012-10-10 10:10:10')
+    _time = event_time('2012-10-10 10:10:10')
 
     #require record
     assert_raise(Fluent::ConfigError){
@@ -88,8 +88,8 @@ class MapFilterTest < Test::Unit::TestCase
   end
 
   def test_config_error_multi
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     #require time
     assert_raise(Fluent::ConfigError){
@@ -102,8 +102,8 @@ class MapFilterTest < Test::Unit::TestCase
   end
 
   def test_config_error_sleep
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     assert_raise(SyntaxError) {
       create_driver %[

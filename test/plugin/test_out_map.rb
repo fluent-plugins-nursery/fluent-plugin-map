@@ -50,9 +50,9 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_syntax_error
-    tag = "tag"
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _tag = "tag"
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     #map is syntax error
     syntax_error_config = %[
@@ -116,9 +116,9 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_config_error_tag
-    tag = "tag"
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _tag = "tag"
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     #require time
     assert_raise(Fluent::ConfigError){
@@ -130,8 +130,8 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_config_error_time
-    tag = "tag"
-    record = {'code' => '300'}
+    _tag = "tag"
+    _record = {'code' => '300'}
 
     #require time
     assert_raise(Fluent::ConfigError){
@@ -143,8 +143,8 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_config_error_record
-    tag = "tag"
-    time = Time.local(2012, 10, 10, 10, 10, 0).to_i
+    _tag = "tag"
+    _time = Time.local(2012, 10, 10, 10, 10, 0).to_i
 
     #require record
     assert_raise(Fluent::ConfigError){
@@ -156,9 +156,9 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_config_error_multi
-    tag = "tag"
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _tag = "tag"
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     #require time
     assert_raise(Fluent::ConfigError){
@@ -172,9 +172,9 @@ class MapOutputTest < Test::Unit::TestCase
   end
 
   def test_config_error_sleep
-    tag = 'tag'
-    time = event_time('2012-10-10 10:10:10')
-    record = {'code' => '300'}
+    _tag = 'tag'
+    _time = event_time('2012-10-10 10:10:10')
+    _record = {'code' => '300'}
 
     assert_raise(SyntaxError) {
       create_driver %[
