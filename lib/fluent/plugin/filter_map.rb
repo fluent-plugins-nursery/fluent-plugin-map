@@ -34,6 +34,12 @@ module Fluent::Plugin
       @map_support = Fluent::Plugin::MapSupport.new(@map, self)
     end
 
+    def stop
+      @map_support.stop
+
+      super
+    end
+
     def determine_format()
       if @format
         @format

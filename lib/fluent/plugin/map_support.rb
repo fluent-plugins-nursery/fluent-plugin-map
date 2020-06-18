@@ -14,12 +14,17 @@
 #    limitations under the License.
 #
 
+require 'fluent/plugin/parser'
+
 module Fluent
   module Plugin
     class MapSupport
       def initialize(map, plugin)
         @map = map
         @plugin = plugin
+        @checker = Fluent::Plugin::Parser::TimeoutChecker.new(@plugin.timeout)
+        @checker.start
+
         if plugin.is_a?(Fluent::Plugin::Filter)
           singleton_class.module_eval(<<-CODE)
           def map_func(time, record)
@@ -103,12 +108,16 @@ module Fluent
 
       def timeout_block
         begin
-          Timeout.timeout(@plugin.timeout){
+          @checker.execute {
             yield
           }
         rescue Timeout::Error
           @plugin.log.error {"Timeout: #{Time.at(time)} #{tag} #{record.inspect}"}
         end
+      end
+
+      def stop
+        @checker.stop
       end
     end
   end
