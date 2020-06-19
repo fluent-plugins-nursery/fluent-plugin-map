@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.license       = "Apache-2.0"
 
   s.add_development_dependency "rake"
-  s.add_development_dependency "fluentd", [">= 0.14.0", "< 2"]
+  s.add_development_dependency "fluentd", [">= 1.7.0", "< 2"]
   s.add_development_dependency "test-unit", "~> 3.1"
   s.add_development_dependency "appraisal"
 end
