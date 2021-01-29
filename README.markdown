@@ -14,6 +14,17 @@ fluent-plugin-map(out\_map) is the non-buffered plugin that can convert an event
 
 ## MapFilter
 
+### Configuration
+
+| parameter | description                                                                                                                                            | default |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| map       | Specify rule to convert an event log                                                                                                                   | nil     |
+| time      | Specify rule to convert a time. The format of time is an integer number of seconds since the Epoch                                                     | nil     |
+| record    | Specify rule to convert a record.The format of record is hash.                                                                                         | nil     |
+| multi     | Enable to output multi logs                                                                                                                            | `false` |
+| timeout   | Specify timeout                                                                                                                                        | `1`     |
+| format    | Specify format. If `map` is specified, the format is `map`. If `time` and `record` is specified, the format is `record`. (`map`, `record`, `multimap`) | nil     |
+
 ### Example
 
 This sample config filter code file and time file.
@@ -77,6 +88,20 @@ If you don't use multi option, you can use time, record parameter. The 2 followi
     </filter>
 
 ## MapOutput
+
+### Configuration
+
+
+| parameter | description                                                                                                                                                      | default |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| map       | Specify rule to convert an event log                                                                                                                             | nil     |
+| time      | Specify rule to convert a time. The format of time is an integer number of seconds since the Epoch                                                               | nil     |
+| record    | Specify rule to convert a record.The format of record is hash.                                                                                                   | nil     |
+| multi     | Enable to output multi logs                                                                                                                                      | `false` |
+| timeout   | Specify timeout                                                                                                                                                  | `1`     |
+| format    | Specify format. If `map` is specified, the format is `map`. If `time` and `record` and (`tag` or `key`) are specified, the format is `record`. (`map`, `record`) | nil     |
+| key       | Specify the key in record. This parameter is deprecated.                                                                                                         | nil     |
+| tag       | Specify the tag in record                                                                                                                                        | nil     |
 
 ### Example
 
