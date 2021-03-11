@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "fluentd", [">= 1.7.0", "< 2"]
   s.add_development_dependency "test-unit", "~> 3.1"
   s.add_development_dependency "appraisal"
+  s.add_development_dependency "webrick"
 end
