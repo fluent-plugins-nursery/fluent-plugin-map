@@ -1,6 +1,7 @@
 # fluent-plugin-map
 
-[![Build Status](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-map.svg?branch=master)](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-map)
+[![Testing on Ubuntu](https://github.com/fluent-plugins-nursery/fluent-plugin-map/actions/workflows/linux.yml/badge.svg)](https://github.com/fluent-plugins-nursery/fluent-plugin-map/actions/workflows/linux.yml)
+[![Testing on Windows](https://github.com/fluent-plugins-nursery/fluent-plugin-map/actions/workflows/windows.yml/badge.svg)](https://github.com/fluent-plugins-nursery/fluent-plugin-map/actions/workflows/windows.yml)
 
 fluent-plugin-map(out\_map) is the non-buffered plugin that can convert an event log to different event log(s)
 
